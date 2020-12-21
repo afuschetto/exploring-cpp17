@@ -18,7 +18,7 @@ namespace af
     MyClass::MyClass(const char *msg)
         : mMsg(strdup(msg))
     {
-        cout << "[" << this << "] Ctor(" << msg << ")" << endl;
+        cout << "[" << this << "] Ctor(\"" << msg << "\")" << endl;
     }
 
     MyClass::~MyClass()
@@ -91,7 +91,7 @@ namespace af
 
     ///////////////////////////////////////////////////////////////////////////
 
-    // This is useful also for some STL algorithms.
+    // Useful also for some STL algorithms.
     void swap(MyClass &first, MyClass &second) noexcept
     {
         std::swap(first.mMsg, second.mMsg);
