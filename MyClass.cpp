@@ -10,7 +10,7 @@ using namespace std;
 namespace af
 {
     MyClass::MyClass()
-        : MyClass("No message")
+        : mMsg(strdup("No message"))
     {
         cout << "[" << this << "] Default ctor()" << endl;
     }
@@ -25,11 +25,13 @@ namespace af
     {
         cout << "[" << this << "] Dtor" << endl;
 
+        // TODO: Only if different from nullptr (move semantic)
         free(mMsg);
     }
 
     ///////////////////////////////////////////////////////////////////////////
 
+#if COPY_SEMANTIC
     // Build a new object deeply copying all the member data of the source
     // object (thus including dynamically allocated memory).
     MyClass::MyClass(const MyClass &src)
@@ -61,9 +63,11 @@ namespace af
         swap(*this, tmp); // Swap of member data (throw no exceptions)
         return *this;     // Destruction of the previous status of the "lhs" object (throw no exceptions)
     }
+#endif // COPY_SEMANTIC
 
     ///////////////////////////////////////////////////////////////////////////
 
+#if MOVE_SEMANTIC
     // Construct a new object shallow copying all the member data of the source
     // object (thus excluding dynamically allocated memory).
     MyClass::MyClass(MyClass &&src) noexcept
@@ -88,6 +92,7 @@ namespace af
         swap(*this, tmp);            // Swap of member data (throw no exceptions)
         return *this;                // Destruction of the previous status of the "lhs" object (throw no exceptions)
     }
+#endif // MOVE_SEMANTIC
 
     ///////////////////////////////////////////////////////////////////////////
 
@@ -95,5 +100,22 @@ namespace af
     void swap(MyClass &first, MyClass &second) noexcept
     {
         std::swap(first.mMsg, second.mMsg);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    // TODO: (Six) Comparison operators
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    string MyClass::getMsg() const {
+        return mMsg;
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+
+    ostream& operator<<(ostream& os, const MyClass& rhs) {
+        os << rhs.getMsg();
+        return os;
     }
 } // namespace af
